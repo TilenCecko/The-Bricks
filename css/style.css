@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    font-family: Verdana, sans-serif;
+    color: black;
+    background: rgb(189, 189, 189);
+}
+
+.container {
+    padding: 24px;
+    text-align: center;
+    border: 1px solid var();
+    border-radius: 12px;
+    background: white;
+}
+
+.game-title {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 3rem);
+    line-height: 1;
+}
+
+.game-hint {
+    margin: 12px 0 20px;
+    color: black;
+    font-size: 25px
+}
+
+.canvas-frame {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+    background: #f8fbff;
+}
+
+#canvas {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    border-radius: 8px;
+    background: #ffffff;
+}
