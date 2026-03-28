@@ -4,15 +4,31 @@
   <meta charset="UTF-8">
   <title>The Bricks</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/jQuery.js"></script>
   <script src="js/script.js"></script>
 </head>
 <body onload="init()">
   <div class="container">
-    <h1 class="game-title">The Bricks</h1>
-    <p class="game-hint">Premikaj ploscico z levo in desno puscico.</p>
-    <p>Cas: <mark id="cas">00:00</mark></p>
-    <p>Tocke: <mark id="tocke">0</mark></p>
+    <div class="game-header">
+      <p class="eyebrow">Arcade Challenge</p>
+      <h1 class="game-title">The Bricks</h1>
+      <p class="game-hint">Premikaj ploscico z levo in desno puscico in pocisti vse bloke.</p>
+    </div>
+    <div class="hud">
+      <div class="hud-card">
+        <span class="hud-label">Level</span>
+        <mark id="level">1</mark>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Cas</span>
+        <mark id="cas">00:00</mark>
+      </div>
+      <div class="hud-card">
+        <span class="hud-label">Tocke</span>
+        <mark id="tocke">0</mark>
+      </div>
+    </div>
     <div class="canvas-frame">
       <canvas id="canvas" width="720" height="520"></canvas>
     </div>
