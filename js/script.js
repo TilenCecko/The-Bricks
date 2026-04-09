@@ -43,9 +43,9 @@ function updateLevelDisplay() {
 }
 
 function resetBall() {
-    x = 150;
-    y = 200;
-    dx = 2;
+    x = 350;
+    y = 500;
+    dx = 0;
     dy = 4;
     start = true;
 }
@@ -68,7 +68,7 @@ function init() {
 }
 
 function init_paddle() {
-    paddlex = WIDTH / 2;
+    paddlex = WIDTH / 2.5;
     paddleh = 10;
 
     if(level==1){
@@ -83,27 +83,25 @@ function init_paddle() {
 }
 
 function initbricks() {
-    NROWS = 2;
-    NCOLS = 3;
+    if(level==1){
+        NROWS = 3;
+        NCOLS = 4;
+    }else if(level==2){
+        NROWS = 5;
+        NCOLS = 6;
+    }else if(level==3){
+        NROWS = 5;
+        NCOLS = 10;
+    }else{
+        NROWS = 2;
+        NCOLS = 2;
+    }
     BRICKWIDTH = (WIDTH / NCOLS) - 1;
     BRICKHEIGHT = 30;
     PADDING = 1;
     bricks = new Array(NROWS);
 
 
-    if(level==1){
-        NROWS = 2;
-        NCOLS = 3;
-    }else if(level==2){
-        NROWS = 5;
-        NCOLS = 5;
-    }else if(level==3){
-        NROWS = 10;
-        NCOLS = 10;
-    }else{
-        NROWS = 2;
-        NCOLS = 2;
-    }
 
     for (var i = 0; i < NROWS; i++) {
         bricks[i] = new Array(NCOLS);
