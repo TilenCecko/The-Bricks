@@ -311,3 +311,29 @@ function togglePause() {
     isPaused = true;
     updatePauseButton();
 }
+
+function resetGame() {
+    clearInterval(intervalId);
+    clearInterval(timerId);
+    intervalId = null;
+    timerId = null;
+
+    level = 1;
+    sekunde = 0;
+    izpisTimer = "00:00";
+    tocke = 0;
+    gameWon = false;
+    start = true;
+    isPaused = true;
+    rightDown = false;
+    leftDown = false;
+
+    resetBall();
+    init_paddle();
+    initbricks();
+    updateLevelDisplay();
+    $("#cas").html(izpisTimer);
+    $("#tocke").html(tocke);
+    drawScene();
+    updatePauseButton();
+}
