@@ -48,6 +48,27 @@ body {
     margin-bottom: 14px;
 }
 
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.controls button {
+    padding: 10px 18px;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #eaf3ff 100%);
+    color: #0f2742;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+}
+
 .kocke {
     padding: 10px 12px;
     width: 200px;

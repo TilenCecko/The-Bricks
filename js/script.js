@@ -37,6 +37,7 @@ var BRICKWIDTH;
 var BRICKHEIGHT;
 var PADDING;
 var gameWon = false;
+var isPaused = true;
 
 function updateLevelDisplay() {
     $("#level").html(level);
@@ -54,6 +55,8 @@ function init() {
     ctx = $("#canvas")[0].getContext("2d");
     WIDTH = $("#canvas").width();
     HEIGHT = $("#canvas").height();
+    $(document).keydown(onKeyDown);
+    $(document).keyup(onKeyUp);
     resetBall();
     init_paddle();
     initbricks();
@@ -63,8 +66,8 @@ function init() {
     updateLevelDisplay();
     $("#cas").html(izpisTimer);
     $("#tocke").html(tocke);
-    intervalId = setInterval(draw, 10);
-    timerId = setInterval(timer, 1000);
+    drawScene();
+    updatePauseButton();
 }
 
 function init_paddle() {
@@ -151,9 +154,6 @@ function timer() {
         minuteI = ((minuteI = Math.floor(sekunde / 60)) > 9) ? minuteI : "0" + minuteI;
         izpisTimer = minuteI + ":" + sekundeI;
         $("#cas").html(izpisTimer);
-    } else {
-        sekunde = 0;
-        $("#cas").html(izpisTimer);
     }
 }
 
@@ -178,6 +178,8 @@ function preveriZmago() {
         gameWon = true;
         clearInterval(timerId);
         clearInterval(intervalId);
+        timerId = null;
+        intervalId = null;
         Swal.fire({
             title: 'Bravo!',
             text: 'Koncal si level ' + level,
@@ -190,16 +192,18 @@ function preveriZmago() {
             resetBall();
             init_paddle();
             initbricks();
-            intervalId = setInterval(draw, 10);
-            timerId = setInterval(timer, 1000);
+            isPaused = true;
+            drawScene();
+            updatePauseButton();
         });
     }
 }
 
+function updatePauseButton() {
+    $("#pause-btn").html(isPaused ? "Nadaljuj" : "Pavza");
+}
 
-function draw() {
-    $(document).keydown(onKeyDown);
-    $(document).keyup(onKeyUp);
+function drawScene() {
     clear();
     ctx.fillStyle = ballcolor;
     circle(x, y, 10);
@@ -234,6 +238,10 @@ function draw() {
             }
         }
     }
+}
+
+function draw() {
+    drawScene();
 
     var rowheight = BRICKHEIGHT + PADDING + f / 2;
     var colwidth = BRICKWIDTH + PADDING + f / 2;
@@ -263,11 +271,43 @@ function draw() {
         } else if (y + dy > HEIGHT - r) {
             clearInterval(timerId);
             clearInterval(intervalId);
+            timerId = null;
+            intervalId = null;
+            isPaused = true;
+            updatePauseButton();
         }
     }
 
     x += dx;
     y += dy;
+}
 
+function startGame() {
+    if (intervalId || timerId) {
+        return;
+    }
 
+    if (dx === 0) {
+        dx = 2;
+    }
+
+    start = true;
+    isPaused = false;
+    intervalId = setInterval(draw, 10);
+    timerId = setInterval(timer, 1000);
+    updatePauseButton();
+}
+
+function togglePause() {
+    if (!intervalId || !timerId) {
+        startGame();
+        return;
+    }
+
+    clearInterval(intervalId);
+    clearInterval(timerId);
+    intervalId = null;
+    timerId = null;
+    isPaused = true;
+    updatePauseButton();
 }
