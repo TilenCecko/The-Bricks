@@ -81,7 +81,5 @@ mark {
     height: auto;
     margin: 0 auto;
     border: 3px solid #93c5fd;
-    border-radius: 16px;
     background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
 }
-

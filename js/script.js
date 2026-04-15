@@ -96,9 +96,9 @@ function initbricks() {
         NROWS = 2;
         NCOLS = 2;
     }
-    BRICKWIDTH = (WIDTH / NCOLS) - 1;
-    BRICKHEIGHT = 30;
     PADDING = 5;
+    BRICKWIDTH = (WIDTH - (PADDING * (NCOLS - 1))) / NCOLS;
+    BRICKHEIGHT = 30;
     bricks = new Array(NROWS);
 
 
