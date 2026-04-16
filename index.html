@@ -13,15 +13,15 @@
   <div class="container">
     <div class="game-header">
       <h1 class="naslov">The Bricks</h1>
-      <p class="navodila">Premikaj ploscico z levo in desno puscico in pocisti vse bloke.</p>
+      <p class="navodila">Premikaj ploščico z levo in desno puščico in počisti vse bloke.</p>
     </div>
     <div class="hud">
       <div class="kocke">
-        <span class="hud-label">Tocke</span>
+        <span class="hud-label">Točke</span>
         <label id="tocke">0</label>
       </div>
       <div class="kocke">
-        <span class="hud-label">Cas</span>
+        <span class="hud-label">Čas</span>
         <label id="cas">00:00</label>
       </div>
       <div class="kocke">
@@ -30,13 +30,14 @@
       </div>
 
     </div>
-    <div class="gumbi">
-      <button id="start-btn" type="button" onclick="startGame()">Start</button>
-      <button id="pause-btn" type="button" onclick="togglePause()">Pavza</button>
-      <button id="reset-btn" type="button" onclick="resetGame()">Reset</button>
-    </div>
+
     <div class="canvas-frame">
       <canvas id="canvas" width="710" height="520"></canvas>
+    </div>
+    <div class="gumbi">
+      <button id="start-btn" type="button" onclick="startGame()">Začetek</button>
+      <button id="pause-btn" type="button" onclick="togglePause()">Pavza</button>
+      <button id="reset-btn" type="button" onclick="resetGame()">Reset</button>
     </div>
   </div>
 </body>

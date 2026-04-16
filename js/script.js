@@ -199,10 +199,6 @@ function preveriZmago() {
     }
 }
 
-function updatePauseButton() {
-    $("#pause-btn").html(isPaused ? "Nadaljuj" : "Pavza");
-}
-
 function drawScene() {
     clear();
     ctx.fillStyle = ballcolor;

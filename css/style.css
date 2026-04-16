@@ -10,7 +10,7 @@ body {
     align-items: center;
     justify-content: center;
     font-family: "Segoe UI";
-    color: #1f2a37;
+    color: #000000;
     background: rgb(196, 239, 252);
 }
 
@@ -28,14 +28,13 @@ body {
 }
 
 .naslov {
-    color: #0f172a;
-    line-height: 1;
+    color: #000000;
 }
 
 .navodila {
     max-width: 620px;
     margin: 8px auto 0;
-    color: #475569;
+    color: #4c5055;
     line-height: 1.35;
 }
 
@@ -49,6 +48,7 @@ body {
 }
 
 .gumbi {
+    padding-top: 30px;
     display: flex;
     justify-content: center;
     gap: 10px;
@@ -60,7 +60,7 @@ body {
     border: 1px solid #000000;
     border-radius: 12px;
     background-color: #e5f1ff;
-    color: #0f2742;
+    color: #000000;
     font-weight: bold;
     cursor: pointer;
 }
@@ -84,11 +84,10 @@ body {
 mark {
     padding: 0;
     background: transparent;
-    color: #0f172a;
+    color: #000000;
 }
 
 .canvas-frame {
-    background: linear-gradient(180deg, #f8fbff 0%, #e0efff 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
@@ -97,5 +96,5 @@ mark {
     width: 720px;
     height: auto;
     margin: 0 auto;
-    background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
+    background-color: white;
 }
