@@ -19,7 +19,7 @@ body {
     border: 1px solid #cbd5e1;
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 20px 50px rgba(37, 99, 235, 0.16);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16);
 }
 
 .game-header {
@@ -57,7 +57,7 @@ body {
 
 .gumbi button {
     padding: 10px 18px;
-    border: 1px solid #bfdbfe;
+    border: 1px solid #000000;
     border-radius: 12px;
     background-color: #e5f1ff;
     color: #0f2742;
@@ -67,8 +67,8 @@ body {
 
 .kocke {
     padding: 10px 12px;
-    width: 200px;
-    border: 1px solid #dbeafe;
+    width: 150px;
+    border: 1px solid #000000;
     border-radius: 20px;
     background-color: #e5f1ff;
     text-align: center;
@@ -97,6 +97,5 @@ mark {
     width: 720px;
     height: auto;
     margin: 0 auto;
-    border: 3px solid #93c5fd;
     background: linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
 }

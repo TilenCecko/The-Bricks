@@ -11,7 +11,7 @@ var intervalId;
 var timerId;
 var level = 1;
 
-var paddlecolor = "#0f2742";
+var paddlecolor = "#000000";
 var ballcolor = "#fb8500";
 var brickcolors = {
     1: "#7cc576",
@@ -87,11 +87,11 @@ function init_paddle() {
 
 function initbricks() {
     if(level==1){
-        NROWS = 3;
-        NCOLS = 4;
+        NROWS = 4;
+        NCOLS = 8;
     }else if(level==2){
-        NROWS = 5;
-        NCOLS = 6;
+        NROWS = 6;
+        NCOLS = 10;
     }else if(level==3){
         NROWS = 5;
         NCOLS = 10;
@@ -251,7 +251,7 @@ function draw() {
     if (y < NROWS * rowheight && row >= 0 && col >= 0 && col < NCOLS && bricks[row][col] > 0) {
         dy = -dy;
         bricks[row][col]--;
-        tocke++;
+        tocke = tocke+Math.floor(Math.random() * 3) + 1;;
         $("#tocke").html(tocke);
         preveriZmago();
     }
