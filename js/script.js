@@ -362,13 +362,15 @@ function navodila(){
     Swal.fire({
         title: 'Navodila',
         html: `
-            <ul style="text-align:left">
-                <li>Puščice ← → za premikanje</li>
-                <li>3 levele</li>
-                <li>Barvni bloki potrebujejo več udarcev</li>
-                <li>Uniči vse bloke</li>
+            <ul style="text-align: left;"> 
+            <li>Uporabi <b>puščice levo/desno</b> za premikanje paddla.</li> 
+            <li>Imaš <b>3 levele</b>, vsak je težji.</li> 
+            <li>Nekateri bloki so <b>druge barve</b> in jih moraš zadeti večkrat, da se uničijo.</li> 
+            <li>Cilj je uničiti vse bloke.</li> 
             </ul>
-        `
+        `,
+        icon: 'info', 
+        confirmButtonText: 'V redu'
     });
 }
 
