@@ -20,15 +20,15 @@
         <span class="hud-label">Točke</span>
         <label id="tocke">0</label>
       </div>
-      <div class="kocke">
-        <span class="hud-label">Čas</span>
-        <label id="cas">00:00</label>
-      </div>
+    <div class="kocke" id="cas-box">
+      <span class="hud-label">Cas</span>
+      <mark id="cas">00:00</mark>
+    </div>
+
       <div class="kocke">
         <span class="hud-label">Level</span>
         <label id="level">1</label>
       </div>
-
     </div>
 
     <div class="canvas-frame">
@@ -38,6 +38,9 @@
       <button id="start-btn" type="button" onclick="startGame()">Začetek</button>
       <button id="pause-btn" type="button" onclick="togglePause()">Pavza</button>
       <button id="reset-btn" type="button" onclick="resetGame()">Reset</button>
+      <button id="reset-btn" type="button" onclick="navodila()">Navodila</button>
+      <button id="reset-btn" type="button" onclick="lestvica()">🏆 Lestvica</button>
+      <button id="reset-btn" type="button" onclick="pocistiLestvico()">Ponastavi Lestvico</button>
     </div>
   </div>
 </body>

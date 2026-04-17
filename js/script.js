@@ -18,6 +18,7 @@ var brickcolors = {
     2: "#f5a623",
     3: "#d64541"
 };
+
 var start = true;
 var tocke;
 var sekunde;
@@ -36,8 +37,11 @@ var NCOLS;
 var BRICKWIDTH;
 var BRICKHEIGHT;
 var PADDING;
+
 var gameWon = false;
 var isPaused = true;
+var playerName = "";
+var playerNamePromise = null;
 
 function updateLevelDisplay() {
     $("#level").html(level);
@@ -55,19 +59,51 @@ function init() {
     ctx = $("#canvas")[0].getContext("2d");
     WIDTH = $("#canvas").width();
     HEIGHT = $("#canvas").height();
+
     $(document).keydown(onKeyDown);
     $(document).keyup(onKeyUp);
+
+    $("#cas-box").off("click").on("click", showCredits);
+
     resetBall();
     init_paddle();
     initbricks();
+
     sekunde = 0;
     izpisTimer = "00:00";
     tocke = 0;
+
     updateLevelDisplay();
     $("#cas").html(izpisTimer);
     $("#tocke").html(tocke);
+
     drawScene();
     updatePauseButton();
+    ensurePlayerName();
+}
+
+function ensurePlayerName() {
+    playerNamePromise = Swal.fire({
+        title: 'Vpiši uporabniško ime',
+        input: 'text',
+        inputLabel: 'Brez tega ne moreš začeti igre.',
+        inputPlaceholder: 'npr. Tilen',
+        confirmButtonText: 'Shrani',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        inputValidator: function (value) {
+            if (!value || !value.trim()) {
+                return 'Vpiši uporabniško ime.';
+            }
+        }
+    }).then(function (result) {
+        playerName = result.value.trim();
+        localStorage.setItem("bricksCurrentPlayer", playerName);
+        playerNamePromise = null;
+        return playerName;
+    });
+
+    return playerNamePromise;
 }
 
 function init_paddle() {
@@ -99,12 +135,12 @@ function initbricks() {
         NROWS = 2;
         NCOLS = 2;
     }
+
     PADDING = 5;
     BRICKWIDTH = (WIDTH - (PADDING * (NCOLS - 1))) / NCOLS;
     BRICKHEIGHT = 30;
+
     bricks = new Array(NROWS);
-
-
 
     for (var i = 0; i < NROWS; i++) {
         bricks[i] = new Array(NCOLS);
@@ -140,58 +176,56 @@ function allBricksDestroyed() {
             }
         }
     }
-
     return true;
 }
 
 function timer() {
-    var sekundeI;
-    var minuteI;
-
     if (start == true) {
         sekunde++;
-        sekundeI = ((sekundeI = (sekunde % 60)) > 9) ? sekundeI : "0" + sekundeI;
-        minuteI = ((minuteI = Math.floor(sekunde / 60)) > 9) ? minuteI : "0" + minuteI;
+        let sekundeI = (sekunde % 60).toString().padStart(2, "0");
+        let minuteI = Math.floor(sekunde / 60).toString().padStart(2, "0");
         izpisTimer = minuteI + ":" + sekundeI;
         $("#cas").html(izpisTimer);
     }
 }
 
 function onKeyDown(evt) {
-    if (evt.keyCode == 39) {
-        rightDown = true;
-    } else if (evt.keyCode == 37) {
-        leftDown = true;
-    }
+    if (evt.keyCode == 39) rightDown = true;
+    else if (evt.keyCode == 37) leftDown = true;
 }
 
 function onKeyUp(evt) {
-    if (evt.keyCode == 39) {
-        rightDown = false;
-    } else if (evt.keyCode == 37) {
-        leftDown = false;
-    }
+    if (evt.keyCode == 39) rightDown = false;
+    else if (evt.keyCode == 37) leftDown = false;
 }
 
 function preveriZmago() {
     if (!gameWon && allBricksDestroyed()) {
         gameWon = true;
+
         clearInterval(timerId);
         clearInterval(intervalId);
-        timerId = null;
-        intervalId = null;
+
         Swal.fire({
             title: 'Bravo!',
             text: 'Koncal si level ' + level,
-            icon: 'success',
-            confirmButtonText: 'V redu'
+            icon: 'success'
         }).then(function () {
+
+            if(level >= 3){
+                saveScore(tocke);
+                showLeaderboard();
+                return;
+            }
+
             level++;
             gameWon = false;
             updateLevelDisplay();
+
             resetBall();
             init_paddle();
             initbricks();
+
             isPaused = true;
             drawScene();
             updatePauseButton();
@@ -201,22 +235,12 @@ function preveriZmago() {
 
 function drawScene() {
     clear();
+
     ctx.fillStyle = ballcolor;
     circle(x, y, 10);
 
-    if (rightDown) {
-        if ((paddlex + paddlew) < WIDTH) {
-            paddlex += 5;
-        } else {
-            paddlex = WIDTH - paddlew;
-        }
-    } else if (leftDown) {
-        if (paddlex > 0) {
-            paddlex -= 5;
-        } else {
-            paddlex = 0;
-        }
-    }
+    if (rightDown && (paddlex + paddlew) < WIDTH) paddlex += 5;
+    else if (leftDown && paddlex > 0) paddlex -= 5;
 
     ctx.fillStyle = paddlecolor;
     rect(paddlex, HEIGHT - paddleh, paddlew, paddleh);
@@ -226,8 +250,8 @@ function drawScene() {
             if (bricks[i][j] > 0) {
                 ctx.fillStyle = brickcolors[bricks[i][j]];
                 rect(
-                    (j * (BRICKWIDTH + PADDING)) + PADDING,
-                    (i * (BRICKHEIGHT + PADDING)) + PADDING,
+                    j * (BRICKWIDTH + PADDING) + PADDING,
+                    i * (BRICKHEIGHT + PADDING) + PADDING,
                     BRICKWIDTH,
                     BRICKHEIGHT
                 );
@@ -239,34 +263,38 @@ function drawScene() {
 function draw() {
     drawScene();
 
-    var rowheight = BRICKHEIGHT + PADDING + f / 2;
-    var colwidth = BRICKWIDTH + PADDING + f / 2;
+    var rowheight = BRICKHEIGHT + PADDING + f / 2 + r/2;
+    var colwidth = BRICKWIDTH + PADDING + f / 2 + r/2;
+
     var row = Math.floor(y / rowheight);
     var col = Math.floor(x / colwidth);
 
     if (y < NROWS * rowheight && row >= 0 && col >= 0 && col < NCOLS && bricks[row][col] > 0) {
         dy = -dy;
         bricks[row][col]--;
-        tocke = tocke+Math.floor(Math.random() * 3) + 1;;
+        tocke++;
         $("#tocke").html(tocke);
         preveriZmago();
     }
 
-    if (x + dx > WIDTH - r || x + dx < 0 + r) {
-        dx = -dx;
-    }
+    if (x + dx > WIDTH - r || x + dx < r) dx = -dx;
 
-    if (y + dy < 0 + r) {
-        dy = -dy;
-    } else if (y + dy > HEIGHT - (r + f)) {
+    if (y + dy < r) dy = -dy;
+    else if (y + dy > HEIGHT - (r + f)) {
         start = false;
+
         if (x > paddlex && x < paddlex + paddlew) {
             dx = 8 * ((x - (paddlex + paddlew / 2)) / paddlew);
             dy = -dy;
             start = true;
         } else if (y + dy > HEIGHT - r) {
+
             clearInterval(timerId);
             clearInterval(intervalId);
+
+            saveScore(tocke);
+            showLeaderboard();
+
             timerId = null;
             intervalId = null;
             isPaused = true;
@@ -278,58 +306,109 @@ function draw() {
     y += dy;
 }
 
-function startGame() {
-    if (intervalId || timerId) {
-        return;
-    }
+async function startGame() {
+    await ensurePlayerName();
 
-    if (dx === 0) {
-        dx = 2;
-    }
+    if (intervalId) return;
+
+    if (dx === 0) dx = 2;
 
     start = true;
     isPaused = false;
+
     intervalId = setInterval(draw, 10);
     timerId = setInterval(timer, 1000);
+
     updatePauseButton();
 }
 
 function togglePause() {
-    if (!intervalId || !timerId) {
-        startGame();
-        return;
-    }
+    if (!intervalId) return startGame();
 
     clearInterval(intervalId);
     clearInterval(timerId);
+
     intervalId = null;
     timerId = null;
     isPaused = true;
+
     updatePauseButton();
 }
 
 function resetGame() {
     clearInterval(intervalId);
     clearInterval(timerId);
-    intervalId = null;
-    timerId = null;
 
     level = 1;
     sekunde = 0;
-    izpisTimer = "00:00";
     tocke = 0;
+
     gameWon = false;
-    start = true;
     isPaused = true;
-    rightDown = false;
-    leftDown = false;
 
     resetBall();
     init_paddle();
     initbricks();
+
     updateLevelDisplay();
-    $("#cas").html(izpisTimer);
+    $("#cas").html("00:00");
     $("#tocke").html(tocke);
+
     drawScene();
     updatePauseButton();
+}
+
+function navodila(){
+    Swal.fire({
+        title: 'Navodila',
+        html: `
+            <ul style="text-align:left">
+                <li>Puščice ← → za premikanje</li>
+                <li>3 levele</li>
+                <li>Barvni bloki potrebujejo več udarcev</li>
+                <li>Uniči vse bloke</li>
+            </ul>
+        `
+    });
+}
+
+function showCredits() {
+    Swal.fire({
+        title: 'Avtor',
+        text: 'Tilen Čečko'
+    });
+}
+
+function saveScore(score) {
+    let scores = JSON.parse(localStorage.getItem("bricksScores")) || [];
+    let ime = playerName || localStorage.getItem("bricksCurrentPlayer") || "Igralec";
+
+    scores.push({ name: ime, score: score });
+    scores.sort((a, b) => b.score - a.score);
+    scores = scores.slice(0, 5);
+
+    localStorage.setItem("bricksScores", JSON.stringify(scores));
+}
+
+function lestvica() {
+    let scores = JSON.parse(localStorage.getItem("bricksScores")) || [];
+
+    let html = "<ol style='text-align:left'>";
+    scores.forEach(s => {
+        html += `<li>${s.name} - ${s.score}</li>`;
+    });
+    html += "</ol>";
+
+    Swal.fire({
+        title: '🏆 Lestvica',
+        html: html
+    });
+}
+function pocistiLestvico() {
+    localStorage.removeItem("bricksScores");
+
+    Swal.fire({
+        title: 'Lestvica izbrisana!',
+        icon: 'success'
+    });
 }
