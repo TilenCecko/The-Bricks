@@ -83,20 +83,34 @@ function init() {
 }
 
 function ensurePlayerName() {
+    // Ce je ime ze v spremenljivki, ga samo vrnemo in ne odpiramo novega okna.
+    if (playerName && playerName.trim()) {
+        return Promise.resolve(playerName);
+    }
+
+    // Preberemo zadnje shranjeno ime iz localStorage, da ga lahko ponudimo znova.
+    var savedPlayerName = localStorage.getItem("bricksCurrentPlayer");
+    // Ce je okno za vpis imena ze odprto, uporabimo isto Promise vrednost.
+    if (playerNamePromise) {
+        return playerNamePromise;
+    }
+
+    // Odpremo SweetAlert okno za vpis uporabniskega imena.
     playerNamePromise = Swal.fire({
         title: 'Vpiši uporabniško ime',
         input: 'text',
         inputLabel: 'Brez tega ne moreš začeti igre.',
         inputPlaceholder: 'npr. Tilen',
+        inputValue: savedPlayerName ? savedPlayerName.trim() : '',
         confirmButtonText: 'Shrani',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
         inputValidator: function (value) {
             if (!value || !value.trim()) {
                 return 'Vpiši uporabniško ime.';
             }
         }
     }).then(function (result) {
+        // Vpisano ime shranimo v spremenljivko in v localStorage,
+        // da ga lahko uporabimo pri shranjevanju rezultata na lestvico.
         playerName = result.value.trim();
         localStorage.setItem("bricksCurrentPlayer", playerName);
         playerNamePromise = null;
@@ -124,10 +138,10 @@ function init_paddle() {
 function initbricks() {
     if(level==1){
         NROWS = 4;
-        NCOLS = 8;
+        NCOLS = 5;
     }else if(level==2){
-        NROWS = 6;
-        NCOLS = 10;
+        NROWS = 5;
+        NCOLS = 7;
     }else if(level==3){
         NROWS = 5;
         NCOLS = 10;
@@ -205,6 +219,8 @@ function preveriZmago() {
 
         clearInterval(timerId);
         clearInterval(intervalId);
+        timerId = null;
+        intervalId = null;
 
         Swal.fire({
             title: 'Bravo!',
@@ -266,10 +282,10 @@ function draw() {
     var rowheight = BRICKHEIGHT + PADDING + f / 2 + r/2;
     var colwidth = BRICKWIDTH + PADDING + f / 2 + r/2;
 
-    var row = Math.floor(y / rowheight);
+    var row = Math.floor((y - r) / rowheight);
     var col = Math.floor(x / colwidth);
 
-    if (y < NROWS * rowheight && row >= 0 && col >= 0 && col < NCOLS && bricks[row][col] > 0) {
+    if (y - r < NROWS * rowheight && row >= 0 && col >= 0 && col < NCOLS && bricks[row][col] > 0) {
         dy = -dy;
         bricks[row][col]--;
         tocke++;
@@ -338,6 +354,8 @@ function togglePause() {
 function resetGame() {
     clearInterval(intervalId);
     clearInterval(timerId);
+    intervalId = null;
+    timerId = null;
 
     level = 1;
     sekunde = 0;
@@ -382,19 +400,27 @@ function showCredits() {
 }
 
 function saveScore(score) {
+    // Iz localStorage preberemo trenutno lestvico.
     let scores = JSON.parse(localStorage.getItem("bricksScores")) || [];
+    // Za nov zapis uporabimo trenutno ime igralca.
     let ime = playerName || localStorage.getItem("bricksCurrentPlayer") || "Igralec";
 
+    // Dodamo nov rezultat na lestvico.
     scores.push({ name: ime, score: score });
+    // Uredimo rezultate od najvisjega do najnizjega.
     scores.sort((a, b) => b.score - a.score);
+    // Obdrzimo samo prvih 5 najboljsih rezultatov.
     scores = scores.slice(0, 5);
 
+    // Posodobljeno lestvico shranimo nazaj v localStorage.
     localStorage.setItem("bricksScores", JSON.stringify(scores));
 }
 
 function lestvica() {
+    // Preberemo vse shranjene rezultate iz localStorage.
     let scores = JSON.parse(localStorage.getItem("bricksScores")) || [];
 
+    // Iz rezultatov sestavimo HTML seznam za prikaz v oknu.
     let html = "<ol style='text-align:left'>";
     scores.forEach(s => {
         html += `<li>${s.name} - ${s.score}</li>`;
