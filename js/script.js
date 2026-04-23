@@ -395,6 +395,7 @@ function navodila(){
 function showCredits() {
     Swal.fire({
         title: 'Avtor',
+        icon: 'info', 
         text: 'Tilen Čečko'
     });
 }
